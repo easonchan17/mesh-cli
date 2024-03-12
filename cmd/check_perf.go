@@ -21,6 +21,7 @@ import (
 
 	"github.com/coinbase/rosetta-cli/pkg/results"
 	t "github.com/coinbase/rosetta-cli/pkg/tester"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"golang.org/x/sync/errgroup"
 )
@@ -46,17 +47,56 @@ func runCheckPerfCmd(_ *cobra.Command, _ []string) error {
 	fmt.Printf("Running Check:Perf for %s:%s for blocks %d-%d \n", Config.Network.Blockchain, Config.Network.Network, Config.Perf.StartBlock, Config.Perf.EndBlock)
 
 	fetcher, timer, elapsed := t.SetupBenchmarking(Config)
+	_, _, fetchErr := fetcher.InitializeAsserter(ctx, Config.Network, Config.ValidationFile)
+	if fetchErr != nil {
+		cancel()
+		err := fmt.Errorf("unable to initialize asserter for fetcher: %w%s", fetchErr.Err, constructionMetadata)
+		color.Red(err.Error())
+		return results.ExitConstruction(
+			Config,
+			nil,
+			nil,
+			err,
+		)
+	}
+
 	blockEndpointTimeConstraint := time.Duration(Config.Perf.BlockEndpointTimeConstraintMs*TotalNumEndpoints) * time.Millisecond
 	blockEndpointCtx, blockEndpointCancel := context.WithTimeout(ctx, blockEndpointTimeConstraint)
 	g.Go(func() error {
+		// TODO???
+		time.Sleep(3000000000)
+		if fetcher.Asserter == nil {
+			color.Red("Bmark asserter is not initialize")
+			return nil
+		}
 		return t.BmarkBlock(blockEndpointCtx, Config, fetcher, timer, elapsed, perfRawStats)
 	})
 	defer blockEndpointCancel()
 
 	fetcher, timer, elapsed = t.SetupBenchmarking(Config)
+	_, _, fetchErr = fetcher.InitializeAsserter(ctx, Config.Network, Config.ValidationFile)
+	if fetchErr != nil {
+		cancel()
+		err := fmt.Errorf("unable to initialize asserter for fetcher: %w%s", fetchErr.Err, constructionMetadata)
+		color.Red(err.Error())
+		return results.ExitConstruction(
+			Config,
+			nil,
+			nil,
+			err,
+		)
+	}
+
 	accountBalanceEndpointTimeConstraint := time.Duration(Config.Perf.AccountBalanceEndpointTimeConstraintMs*TotalNumEndpoints) * time.Millisecond
 	accountBalanceEndpointCtx, accountBalanceEndpointCancel := context.WithTimeout(ctx, accountBalanceEndpointTimeConstraint)
 	g.Go(func() error {
+		// TODO ???
+		time.Sleep(3000000000)
+		if fetcher.Asserter == nil {
+			color.Red("BmarkAccountBalance asserter is not initialize")
+			return nil
+		}
+
 		return t.BmarkAccountBalance(accountBalanceEndpointCtx, Config, fetcher, timer, elapsed, perfRawStats)
 	})
 	defer accountBalanceEndpointCancel()

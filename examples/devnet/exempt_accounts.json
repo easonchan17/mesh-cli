@@ -1,10 +1,10 @@
 [
   {
     "account_identifier": {
-      "address":"0x379fC39D8744ED0C1c8BCfd86771338b9086660D"
+      "address":"0x0000000000000000000000000000000000001000"
     },
     "currency": {
-      "symbol": "ETH",
+      "symbol": "CORE",
       "decimals": 18
     }
   }

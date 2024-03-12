@@ -70,8 +70,8 @@ const (
 	DefaultAccountBalanceEndpointTimeConstraintMs = 5000
 
 	// ETH Defaults
-	EthereumIDBlockchain = "Ethereum"
-	EthereumIDNetwork    = "Ropsten"
+	EthereumIDBlockchain = "Corechain"
+	EthereumIDNetwork    = "Dev"
 )
 
 // Default Configuration Values

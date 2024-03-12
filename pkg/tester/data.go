@@ -943,7 +943,8 @@ func (t *DataTester) WaitForEmptyQueue(
 	defer tc.Stop()
 
 	color.Cyan(
-		"[PROGRESS] remaining reconciliations: %d%s",
+		"[PROGRESS] complete reconciliations:%d,  remaining reconciliations: %d%s",
+		startingComplete,
 		startingRemaining,
 		metadata,
 	)

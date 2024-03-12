@@ -71,7 +71,7 @@ func BmarkAccountBalance(ctx context.Context, config *configuration.Configuratio
 		for m := config.Perf.StartBlock; m < config.Perf.EndBlock; m++ {
 			for n := 0; n < config.Perf.NumTimesToHitEndpoints; n++ {
 				account := &types.AccountIdentifier{
-					Address: "address",
+					Address: "0x0eECBfdf505dbB2CAfa5099b294717cE926fD266",
 				}
 				partialBlockId := &types.PartialBlockIdentifier{
 					Hash:  nil,
